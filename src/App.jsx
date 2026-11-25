@@ -12,16 +12,17 @@ import { getTomorrowDateISO } from './data/deliveryZones';
 import { BUSINESS_INFO } from './data/translations';
 
 const CURRENT_YEAR = new Date().getFullYear();
+const STORAGE_KEY = 'bhajicart_demo_orders_v1';
 
 const SEED_DEMO_ORDERS = [
   {
-    id: 'SM-4812',
+    id: 'BC-1001',
     createdAt: '08:15 PM',
-    customerName: 'Sneha Kulkarni',
-    customerPhone: '98201XXXXX',
-    zoneId: 'nerul',
-    zoneName: 'Nerul & Seawoods',
-    address: 'Palm Beach Residency, Sector 42, Nerul',
+    customerName: 'Demo Customer A',
+    customerPhone: '90000 11111',
+    zoneId: 'central-hub',
+    zoneName: 'Central Zone (Sectors 1–10)',
+    address: 'Sample Residency, Sector 4, Demo City',
     deliveryDate: getTomorrowDateISO(),
     slot: '4:00 PM – 5:00 PM (Home Delivery)',
     prepNote: 'Please cut bhendi medium size',
@@ -33,16 +34,16 @@ const SEED_DEMO_ORDERS = [
     subtotal: 240,
     deliveryFee: 0,
     total: 240,
-    status: 'Scheduled for 5 AM Purchase',
+    status: 'Scheduled for 5 AM Purchase (Demo)',
   },
   {
-    id: 'SM-4815',
+    id: 'BC-1002',
     createdAt: '09:05 PM',
-    customerName: 'Rohan Deshmukh',
-    customerPhone: '98674XXXXX',
-    zoneId: 'belapur-ulwe',
-    zoneName: 'CBD Belapur & Ulwe',
-    address: 'Sector 19, Ulwe, Navi Mumbai',
+    customerName: 'Demo Customer B',
+    customerPhone: '90000 22222',
+    zoneId: 'east-metro',
+    zoneName: 'Lakeview & East Metro',
+    address: 'Wing B, Lakeview Demo Towers, Sample City',
     deliveryDate: getTomorrowDateISO(),
     slot: '4:00 PM – 5:00 PM (Home Delivery)',
     prepNote: '',
@@ -55,21 +56,21 @@ const SEED_DEMO_ORDERS = [
     subtotal: 320,
     deliveryFee: 0,
     total: 320,
-    status: 'Scheduled for 5 AM Purchase',
+    status: 'Scheduled for 5 AM Purchase (Demo)',
   },
 ];
 
 export default function App() {
   const [lang, setLang] = useState('en');
   const [catalog, setCatalog] = useState(INITIAL_CATALOG);
-  const [selectedZoneId, setSelectedZoneId] = useState('nerul');
+  const [selectedZoneId, setSelectedZoneId] = useState('central-hub');
   const [cartMap, setCartMap] = useState({});
   const [selectedCuts, setSelectedCuts] = useState({});
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [orders, setOrders] = useState(() => {
     try {
-      const saved = localStorage.getItem('sabzimate_demo_orders');
+      const saved = localStorage.getItem(STORAGE_KEY);
       return saved ? JSON.parse(saved) : SEED_DEMO_ORDERS;
     } catch {
       return SEED_DEMO_ORDERS;
@@ -78,7 +79,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('sabzimate_demo_orders', JSON.stringify(orders));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
     } catch {
       // ignore storage errors
     }
@@ -165,8 +166,18 @@ export default function App() {
     setOrders((prev) => [newOrder, ...prev]);
   };
 
+  const handleResetDemoData = () => {
+    setCatalog(INITIAL_CATALOG);
+    setOrders(SEED_DEMO_ORDERS);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // ignore storage errors
+    }
+  };
+
   return (
-    <div className="min-h-screen overflow-x-clip bg-[#FAF8F2] text-[#14281D]">
+    <div className="min-h-screen overflow-x-clip bg-[#F6F8F3] text-[#10241A]">
       <Navbar
         lang={lang}
         onToggleLang={() => setLang((prev) => (prev === 'en' ? 'mr' : 'en'))}
@@ -210,31 +221,24 @@ export default function App() {
 
       {/* Footer (extra bottom padding when floating mobile bar is visible) */}
       <footer
-        className={`border-t border-[#1E3B2B] bg-[#0F2016] px-4 pt-6 text-xs text-emerald-100/70 md:pb-6 ${
+        className={`border-t border-[#1A3B2A] bg-[#0A2015] px-4 pt-6 text-xs text-emerald-100/75 md:pb-6 ${
           cartCount > 0 ? 'pb-24' : 'pb-6'
         }`}
       >
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-center sm:flex-row sm:px-6 sm:text-left lg:px-8">
           <p>
-            © {CURRENT_YEAR} {BUSINESS_INFO.brandName} {BUSINESS_INFO.parentCompany}.
-            All rights reserved.
+            © {CURRENT_YEAR} {BUSINESS_INFO.brandName} ({BUSINESS_INFO.parentCompany}). Interactive
+            Demo Website — Sample data only.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <button
               type="button"
               onClick={() => setIsAdminOpen(true)}
-              className="font-semibold text-[#E8A317] hover:underline"
+              className="font-semibold text-[#F59E0B] hover:underline"
             >
-              Open Owner Admin & Database Demo
+              Open Owner Admin Demo
             </button>
-            <a
-              href={BUSINESS_INFO.instagramUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-white"
-            >
-              {BUSINESS_INFO.instagramHandle}
-            </a>
+            <span className="text-emerald-200/70">{BUSINESS_INFO.instagramHandle}</span>
           </div>
         </div>
       </footer>
@@ -245,12 +249,12 @@ export default function App() {
           <button
             type="button"
             onClick={() => setIsCartOpen(true)}
-            className="flex min-h-[52px] w-full items-center justify-between rounded-2xl bg-[#1B5E32] px-4 py-3 text-sm font-bold text-white shadow-2xl ring-1 ring-white/15"
+            className="flex min-h-[52px] w-full items-center justify-between rounded-2xl bg-[#146C3B] px-4 py-3 text-sm font-bold text-white shadow-2xl ring-1 ring-white/20"
           >
             <span>
               {cartCount} {cartCount === 1 ? 'item' : 'items'} in basket
             </span>
-            <span className="rounded-full bg-[#E8A317] px-3 py-1 text-xs font-extrabold text-[#14281D]">
+            <span className="rounded-full bg-[#F59E0B] px-3 py-1 text-xs font-extrabold text-[#10241A]">
               View Basket • ₹{cartSubtotal} →
             </span>
           </button>
@@ -275,6 +279,7 @@ export default function App() {
         catalog={catalog}
         onUpdatePrice={handleUpdatePrice}
         orders={orders}
+        onResetDemoData={handleResetDemoData}
       />
     </div>
   );

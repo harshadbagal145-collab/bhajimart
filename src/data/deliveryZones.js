@@ -1,8 +1,8 @@
 export const DELIVERY_ZONES = [
   {
-    id: 'nerul',
-    nameEn: 'Nerul & Seawoods',
-    nameMr: 'नेरूळ आणि सीवूड्स',
+    id: 'central-hub',
+    nameEn: 'Central Zone (Sectors 1–10)',
+    nameMr: 'सेंट्रल झोन (सेक्टर १–१०)',
     freeAbove: 199,
     minOrder: 0,
     baseDeliveryFee: 30,
@@ -11,9 +11,9 @@ export const DELIVERY_ZONES = [
     shortBadge: 'Free > ₹199',
   },
   {
-    id: 'belapur-ulwe',
-    nameEn: 'CBD Belapur & Ulwe',
-    nameMr: 'सीबीडी बेलापूर आणि उलवे',
+    id: 'east-metro',
+    nameEn: 'Lakeview & East Metro',
+    nameMr: 'लेकव्ह्यू आणि ईस्ट मेट्रो',
     freeAbove: 299,
     minOrder: 0,
     baseDeliveryFee: 40,
@@ -22,9 +22,9 @@ export const DELIVERY_ZONES = [
     shortBadge: 'Free > ₹299',
   },
   {
-    id: 'other-navi-mumbai',
-    nameEn: 'Other Navi Mumbai Areas',
-    nameMr: 'नवी मुंबईतील इतर भाग',
+    id: 'outer-city',
+    nameEn: 'Outer City Suburbs',
+    nameMr: 'शहराबाहेरील परिसर',
     freeAbove: null, // always +₹50 delivery charge
     minOrder: 399,
     baseDeliveryFee: 50,
@@ -34,8 +34,8 @@ export const DELIVERY_ZONES = [
   },
   {
     id: 'pickup',
-    nameEn: 'Self-Pickup (Seawoods Station East)',
-    nameMr: 'स्वतः पिकअप (सीवूड्स स्टेशन ईस्ट)',
+    nameEn: 'Self-Pickup (Demo Market Hub)',
+    nameMr: 'स्वतः पिकअप (डेमो मार्केट हब)',
     freeAbove: 0,
     minOrder: 0,
     baseDeliveryFee: 0,
@@ -60,7 +60,7 @@ export function calculateDeliverySummary(zoneId, subtotal) {
     };
   }
 
-  if (zone.id === 'other-navi-mumbai') {
+  if (zone.id === 'outer-city') {
     const meetsMin = subtotal >= zone.minOrder;
     return {
       zone,
